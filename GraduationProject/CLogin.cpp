@@ -98,7 +98,9 @@ void CLogin::LoginFun()
 	}
 	INI_FILE_INFO data_base;
 	data_base = inioiclass->GetINI_File_DataBase_Info();
-	if (!databaseclass1->Connect(data_base.IP, data_base.USER, data_base.PASSWORD, data_base.DBNAME))
+	int port_tmp = 0;{};
+	data_base.PORT.Format("%d", port_tmp);
+	if (!databaseclass1->Connect(data_base.IP, data_base.USER, data_base.PASSWORD, data_base.DBNAME, port_tmp))
 	{
 		MessageBox("数据库连接失败!");
 		return;

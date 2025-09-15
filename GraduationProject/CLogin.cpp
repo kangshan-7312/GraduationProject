@@ -181,13 +181,7 @@ BOOL CLogin::PreTranslateMessage(MSG* pMsg)
 void CLogin::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	int nResult = AfxMessageBox(_T("你确定要退出吗？"), MB_YESNO | MB_ICONQUESTION);
-	if (nResult == IDYES)
-	{
-		// 用户点击了“是”
-		// 执行保存操作
-	}
-	else if (nResult == IDNO)
+	if (AfxMessageBox(_T("你确定要退出吗？"), MB_YESNO | MB_ICONQUESTION) == IDNO)
 	{
 		// 用户点击了“否”
 		// 不保存，直接关闭

@@ -36,4 +36,5 @@ public:
 	CListCtrl m_message_list;
 	afx_msg void OnBnClickedButton4();
 	CListCtrl m_user_list;
+	virtual BOOL PreTranslateMessage(MSG* pMsg);
 };

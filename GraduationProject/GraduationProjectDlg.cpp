@@ -136,6 +136,12 @@ BOOL CGraduationProjectDlg::OnInitDialog()
 
 void CGraduationProjectDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
+	if (AfxMessageBox(_T("你确定要退出吗？"), MB_YESNO | MB_ICONQUESTION) == IDNO)
+	{
+		// 用户点击了“否”
+		// 不保存，直接关闭
+		return;
+	}
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
 		CAboutDlg dlgAbout;
@@ -197,4 +203,25 @@ void CGraduationProjectDlg::OnBnClickedButton4()
 	// TODO: 在此添加控件通知处理程序代码
 	CLogin dlg;
 	dlg.DoModal();
+}
+
+
+BOOL CGraduationProjectDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		// 屏蔽回车键
+		if (pMsg->wParam == VK_RETURN)
+			return TRUE;
+
+		// 屏蔽 ESC 键
+		if (pMsg->wParam == VK_ESCAPE)
+			return TRUE;
+
+		// 屏蔽 Alt+F4
+		if (pMsg->wParam == VK_F4 && (GetAsyncKeyState(VK_MENU) & 0x8000))
+			return TRUE; // 拦截 Alt+F4，不关闭窗口
+	}
+	return CDialogEx::PreTranslateMessage(pMsg);
 }

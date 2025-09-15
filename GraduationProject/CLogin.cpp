@@ -162,18 +162,17 @@ BOOL CLogin::PreTranslateMessage(MSG* pMsg)
 	// TODO: 在此添加专用代码和/或调用基类
 	if (pMsg->message == WM_KEYDOWN)
 	{
-		if (pMsg->wParam == VK_RETURN) // 回车键
-		{
-			// 判断是否是你的输入框
-			if (GetFocus()->GetSafeHwnd() == GetDlgItem(IDC_EDIT1)->GetSafeHwnd())
-			{
-				return TRUE; // 拦截，不传递，不触发对话框关闭
-			}
-		}
-		else if (pMsg->wParam == VK_ESCAPE) // Esc 键
-		{
-			return TRUE; // 拦截 Esc
-		}
+		// 屏蔽回车键
+		if (pMsg->wParam == VK_RETURN)
+			return TRUE;
+
+		// 屏蔽 ESC 键
+		if (pMsg->wParam == VK_ESCAPE)
+			return TRUE;
+
+		// 屏蔽 Alt+F4
+		if (pMsg->wParam == VK_F4 && (GetAsyncKeyState(VK_MENU) & 0x8000))
+			return TRUE; // 拦截 Alt+F4，不关闭窗口
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
@@ -182,9 +181,16 @@ BOOL CLogin::PreTranslateMessage(MSG* pMsg)
 void CLogin::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	if ((nID & 0xFFF0) == SC_CLOSE) // Alt+F4
+	int nResult = AfxMessageBox(_T("你确定要退出吗？"), MB_YESNO | MB_ICONQUESTION);
+	if (nResult == IDYES)
 	{
-		// 屏蔽，不关闭窗口
+		// 用户点击了“是”
+		// 执行保存操作
+	}
+	else if (nResult == IDNO)
+	{
+		// 用户点击了“否”
+		// 不保存，直接关闭
 		return;
 	}
 	CDialogEx::OnSysCommand(nID, lParam);

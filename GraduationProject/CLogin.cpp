@@ -10,6 +10,7 @@
 #include "CRegistryHelper.h"
 #include "CRegistrationDlg.h"
 #include "CConfigDlg.h"
+#include "CIniOIClass.h"
 #include "CToken.h"
 
 struct UserData
@@ -26,6 +27,7 @@ CCryptocurrency* cryptocurrency1 = new CCryptocurrency();
 CDatabaseClass* databaseclass1 = new CDatabaseClass();
 CRegistryHelper* registryhelper = new CRegistryHelper();
 CToken* tokenclass = new CToken();
+CIniOIClass* inioiclass = new CIniOIClass(".\\Config.ini");
 // CLogin 对话框
 
 IMPLEMENT_DYNAMIC(CLogin, CDialogEx)
@@ -94,7 +96,9 @@ void CLogin::LoginFun()
 		MessageBox("不能为空!");
 		return;
 	}
-	if (!databaseclass1->Connect("127.0.0.1", "root", "200958ks", "graduation_project"))
+	INI_FILE_INFO data_base;
+	data_base = inioiclass->GetINI_File_DataBase_Info();
+	if (!databaseclass1->Connect(data_base.IP, data_base.USER, data_base.PASSWORD, data_base.DBNAME))
 	{
 		MessageBox("数据库连接失败!");
 		return;

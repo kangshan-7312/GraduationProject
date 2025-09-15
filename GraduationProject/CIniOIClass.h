@@ -1,5 +1,21 @@
 #pragma once
 #include <vector>
+
+struct INI_FILE_INFO
+{
+	//数据库
+	CString IP;
+	CString USER;
+	CString PASSWORD;
+	CString PORT;
+	CString DBNAME;
+	//AES密码
+	CString AES_PASSWORD;
+	//UDP配置
+	CString UDP_IP;
+	CString UDP_PORT;
+};
+
 class CIniOIClass
 {
 public:
@@ -64,6 +80,11 @@ public:
 	/// </summary>
 	/// <returns>Section 名数组（CString 向量）</returns>
 	std::vector<CString> GetAllSections();
+	/// <summary>
+	/// 获取 INI 文件中所有数据库配置的消息
+	/// </summary>
+	/// <returns>DataBase类型数据</returns>
+	INI_FILE_INFO GetINI_File_DataBase_Info();
 private:
 	CString m_strFilePath;
 };

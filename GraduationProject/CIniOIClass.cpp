@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "CIniOIClass.h"
 
-
 CIniOIClass::CIniOIClass(const CString& strFilePath)
 {
     m_strFilePath = strFilePath;
@@ -84,5 +83,16 @@ std::vector<CString> CIniOIClass::GetAllSections()
     }
 
     return sections;
+}
+
+INI_FILE_INFO CIniOIClass::GetINI_File_DataBase_Info()
+{
+    INI_FILE_INFO tmp;
+    tmp.IP = ReadString("DataBase", "IP", "没有数据");
+    tmp.PORT = ReadString("DataBase", "Port", "没有数据");
+    tmp.USER = ReadString("DataBase", "User", "没有数据");
+    tmp.PASSWORD = ReadString("DataBase", "Password", "没有数据");
+    tmp.DBNAME = ReadString("DataBase", "DBname", "没有数据");
+    return tmp;
 }
 

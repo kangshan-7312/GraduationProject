@@ -9,6 +9,7 @@
 #include "CDatabaseClass.h"
 #include "CRegistryHelper.h"
 #include "CMachineID.h"
+#include "CIniOIClass.h"
 #include <regex>
 #include "string"
 
@@ -27,6 +28,8 @@ CCryptocurrency* cryptocurrency2 = new CCryptocurrency();
 CDatabaseClass* databaseclass2 = new CDatabaseClass();
 CRegistryHelper* registryhelper2 = new CRegistryHelper();
 CMachineID* machineid1 = new CMachineID();
+CIniOIClass* inioiclass3 = new CIniOIClass(".\\Config.ini");
+
 
 // CRegistrationDlg 对话框
 
@@ -115,7 +118,9 @@ void CRegistrationDlg::OnBnClickedButton1()
 		registryhelper2->CloseKey();
 		return;
 	}
-	if (!databaseclass2->Connect("127.0.0.1", "root", "200958ks", "graduation_project"))
+	INI_FILE_INFO data_base;
+	data_base = inioiclass3->GetINI_File_DataBase_Info();
+	if (!databaseclass2->Connect(data_base.IP, data_base.USER, data_base.PASSWORD, data_base.DBNAME))
 	{
 		MessageBox("数据库连接失败!");
 		return;

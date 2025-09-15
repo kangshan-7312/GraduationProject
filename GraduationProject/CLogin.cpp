@@ -63,6 +63,11 @@ END_MESSAGE_MAP()
 void CLogin::OnBnClickedButton8()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	LoginFun();
+}
+
+void CLogin::LoginFun()
+{
 	UserData database;
 	CString only_id;
 	if (registryhelper->CreateKey(HKEY_CURRENT_USER, "UserOnlyID"))
@@ -95,7 +100,7 @@ void CLogin::OnBnClickedButton8()
 		return;
 	}
 	CString sql;
-	sql.Format("SELECT userID, userName, userPassword FROM userdata WHERE userID = '%s'", cryptocurrency1->AESEncrypt(only_id,"200958ks"));
+	sql.Format("SELECT userID, userName, userPassword FROM userdata WHERE userID = '%s'", cryptocurrency1->AESEncrypt(only_id, "200958ks"));
 	//MessageBox(sql);
 	if (databaseclass1->ExecuteQuery(sql, results))
 	{
@@ -132,7 +137,6 @@ void CLogin::OnBnClickedButton8()
 	}
 }
 
-
 void CLogin::OnBnClickedButton1()
 {
 	// TODO: 在此添加控件通知处理程序代码
@@ -164,11 +168,16 @@ BOOL CLogin::PreTranslateMessage(MSG* pMsg)
 	{
 		// 屏蔽回车键
 		if (pMsg->wParam == VK_RETURN)
-			return TRUE;
+		{
+			LoginFun();
+			return 0;
+		}
 
 		// 屏蔽 ESC 键
 		if (pMsg->wParam == VK_ESCAPE)
-			return TRUE;
+		{
+			return 1;
+		}
 
 		// 屏蔽 Alt+F4
 		if (pMsg->wParam == VK_F4 && (GetAsyncKeyState(VK_MENU) & 0x8000))

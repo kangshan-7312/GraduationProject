@@ -53,6 +53,7 @@ BEGIN_MESSAGE_MAP(CLogin, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CLogin::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON2, &CLogin::OnBnClickedButton2)
 	ON_WM_CLOSE()
+	ON_WM_SYSCOMMAND()
 END_MESSAGE_MAP()
 
 
@@ -153,4 +154,38 @@ void CLogin::OnClose()
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
 	exit(0);
 	CDialogEx::OnClose();
+}
+
+
+BOOL CLogin::PreTranslateMessage(MSG* pMsg)
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		if (pMsg->wParam == VK_RETURN) // 回车键
+		{
+			// 判断是否是你的输入框
+			if (GetFocus()->GetSafeHwnd() == GetDlgItem(IDC_EDIT1)->GetSafeHwnd())
+			{
+				return TRUE; // 拦截，不传递，不触发对话框关闭
+			}
+		}
+		else if (pMsg->wParam == VK_ESCAPE) // Esc 键
+		{
+			return TRUE; // 拦截 Esc
+		}
+	}
+	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CLogin::OnSysCommand(UINT nID, LPARAM lParam)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if ((nID & 0xFFF0) == SC_CLOSE) // Alt+F4
+	{
+		// 屏蔽，不关闭窗口
+		return;
+	}
+	CDialogEx::OnSysCommand(nID, lParam);
 }

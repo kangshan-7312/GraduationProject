@@ -37,4 +37,6 @@ public:
 	afx_msg void OnBnClickedButton4();
 	CListCtrl m_user_list;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
+	void ConfigureProgramInformation();
+	afx_msg void OnClose();
 };

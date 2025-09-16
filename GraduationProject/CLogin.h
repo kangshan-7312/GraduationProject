@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "afxdialogex.h"
+#include <string>
 
 
 // CLogin 对话框
@@ -31,4 +32,6 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	void LoginFun();
+	virtual BOOL OnInitDialog();
+	void ConfigureProgramInformation();
 };

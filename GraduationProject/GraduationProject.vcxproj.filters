@@ -137,5 +137,11 @@
     <Image Include="res\GraduationProject.ico">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\icon1.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="C:\Users\kangs\Pictures\Camera Roll\微信.ICO">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -7,10 +7,17 @@
 #include "CConfigDlg.h"
 #include "CIniOIClass.h"
 
+static CString GetExePath()
+{
+	CString strIniPath;
+	GetModuleFileName(NULL, strIniPath.GetBuffer(MAX_PATH), MAX_PATH);
+	strIniPath.ReleaseBuffer();
+	int pos = strIniPath.ReverseFind(_T('\\'));
+	strIniPath = strIniPath.Left(pos + 1) + _T("config.ini");
+	return strIniPath;
+}
 
-#define CONFIG_PATH ".\\Config.ini"
-
-CIniOIClass* inioiclass2 = new CIniOIClass(CONFIG_PATH);
+CIniOIClass* inioiclass2 = new CIniOIClass(GetExePath());
 // CConfigDlg 对话框
 
 IMPLEMENT_DYNAMIC(CConfigDlg, CDialogEx)
@@ -36,6 +43,8 @@ void CConfigDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EDIT2, m_aes_password);
 	DDX_Control(pDX, IDC_EDIT3, m_udp_ip);
 	DDX_Control(pDX, IDC_EDIT8, m_udp_port);
+	DDX_Control(pDX, IDC_EDIT9, m_exe_ico_path);
+	DDX_Control(pDX, IDC_EDIT10, m_exe_name);
 }
 
 
@@ -43,6 +52,8 @@ BEGIN_MESSAGE_MAP(CConfigDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON5, &CConfigDlg::OnBnClickedButton5)
 	ON_BN_CLICKED(IDC_BUTTON1, &CConfigDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON7, &CConfigDlg::OnBnClickedButton7)
+	ON_BN_CLICKED(IDC_BUTTON10, &CConfigDlg::OnBnClickedButton10)
+	ON_BN_CLICKED(IDC_BUTTON9, &CConfigDlg::OnBnClickedButton9)
 END_MESSAGE_MAP()
 
 
@@ -95,6 +106,10 @@ void CConfigDlg::initini()
 	m_udp_ip.SetWindowText(inioiclass2->ReadString("UDP_Info", "IP", "没有数据"));
 	m_udp_port.SetWindowText(inioiclass2->ReadString("UDP_Info", "Port", "没有数据"));
 
+
+	m_exe_ico_path.SetWindowText(inioiclass2->ReadString("EXEINFO", "ExeIcon", "没有数据"));
+	m_exe_name.SetWindowText(inioiclass2->ReadString("EXEINFO", "ExeName", "没有数据"));
+
 }
 
 
@@ -128,4 +143,45 @@ void CConfigDlg::OnBnClickedButton7()
 	inioiclass2->WriteString("UDP_Info", "Port", Udp_Port);
 	MessageBox("设置成功!");
 
+}
+
+void CConfigDlg::OnBnClickedButton10()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	 // TRUE = 打开文件，FALSE = 保存文件
+	CFileDialog dlg(TRUE,
+		_T("ico"),                   // 默认扩展名
+		NULL,                        // 默认文件名
+		OFN_FILEMUSTEXIST | OFN_HIDEREADONLY,
+		_T("图标文件 (*.ico)|*.ico||"),
+		this);
+
+	if (dlg.DoModal() == IDOK)
+	{
+		CString strPath = dlg.GetPathName();  // 获取用户选择的完整路径
+		m_exe_ico_path.SetWindowText(strPath);
+	}
+}
+
+void CConfigDlg::OnBnClickedButton9()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString exe_ico_path, exe_name;
+	m_exe_ico_path.GetWindowText(exe_ico_path);
+	m_exe_name.GetWindowText(exe_name);
+	if (exe_ico_path.IsEmpty() || exe_name.IsEmpty())
+	{
+		MessageBox("不能为空!");
+		return;
+	}
+	// 判断文件是否存在
+	CFileFind finder;
+	if (!finder.FindFile(exe_ico_path))
+	{
+		MessageBox("图标文件不存在!");
+		return;
+	}
+	inioiclass2->WriteString("EXEINFO", "ExeIcon", exe_ico_path);
+	inioiclass2->WriteString("EXEINFO", "ExeName", exe_name);	
+	MessageBox("设置成功!");
 }

@@ -240,7 +240,9 @@
     <None Include="res\GraduationProject.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="C:\Users\kangs\Pictures\Camera Roll\微信.ICO" />
     <Image Include="res\GraduationProject.ico" />
+    <Image Include="res\icon1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

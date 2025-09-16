@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "afxdialogex.h"
+#include <string>
 
 
 // CConfigDlg 对话框
@@ -35,4 +36,8 @@ public:
 	CEdit m_udp_ip;
 	CEdit m_udp_port;
 	afx_msg void OnBnClickedButton7();
+	CEdit m_exe_ico_path;
+	CEdit m_exe_name;
+	afx_msg void OnBnClickedButton10();
+	afx_msg void OnBnClickedButton9();
 };

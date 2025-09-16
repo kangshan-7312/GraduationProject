@@ -23,11 +23,19 @@
 #define new DEBUG_NEW
 #endif
 
-
+static CString GetExePath()
+{
+	CString strIniPath;
+	GetModuleFileName(NULL, strIniPath.GetBuffer(MAX_PATH), MAX_PATH);
+	strIniPath.ReleaseBuffer();
+	int pos = strIniPath.ReverseFind(_T('\\'));
+	strIniPath = strIniPath.Left(pos + 1) + _T("config.ini");
+	return strIniPath;
+}
 
 CCryptocurrency* cryptocurrency = new CCryptocurrency();
 CDatabaseClass* databaseclass = new CDatabaseClass();
-CIniOIClass inioiclass(".\\config.ini");
+CIniOIClass* inioiclass_main = new CIniOIClass(GetExePath());
 CUdpClient* udpclient = new CUdpClient();
 //CInitializationClass* initialization = new CInitializationClass();
 CFileEncryptor* fileencryptor = new CFileEncryptor();
@@ -52,6 +60,9 @@ public:
 // 实现
 protected:
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedOk();
+	CEdit m_ContentOpinion;
 };
 
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
@@ -61,9 +72,11 @@ CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_EDIT1, m_ContentOpinion);
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+	ON_BN_CLICKED(IDOK, &CAboutDlg::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -90,6 +103,7 @@ BEGIN_MESSAGE_MAP(CGraduationProjectDlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CGraduationProjectDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON4, &CGraduationProjectDlg::OnBnClickedButton4)
+	ON_WM_CLOSE()
 END_MESSAGE_MAP()
 
 
@@ -125,6 +139,7 @@ BOOL CGraduationProjectDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 	CLogin dlg;
 	dlg.DoModal();
+	ConfigureProgramInformation();
 	if (!CMachineID::InitCOM())
 	{
 		AfxMessageBox(_T("COM 初始化失败"));
@@ -136,12 +151,6 @@ BOOL CGraduationProjectDlg::OnInitDialog()
 
 void CGraduationProjectDlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
-	if (AfxMessageBox(_T("你确定要退出吗？"), MB_YESNO | MB_ICONQUESTION) == IDNO)
-	{
-		// 用户点击了“否”
-		// 不保存，直接关闭
-		return;
-	}
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
 	{
 		CAboutDlg dlgAbout;
@@ -224,4 +233,59 @@ BOOL CGraduationProjectDlg::PreTranslateMessage(MSG* pMsg)
 			return TRUE; // 拦截 Alt+F4，不关闭窗口
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
+}
+
+
+void CGraduationProjectDlg::ConfigureProgramInformation()
+{
+	// 读取程序名称
+	CString strAppName = inioiclass_main->ReadString(_T("EXEINFO"), _T("ExeName"), _T("默认程序名"));
+	if (!strAppName.IsEmpty())
+	{
+		SetWindowText(strAppName);   // 设置窗口标题
+	}
+
+	// 读取图标路径
+	CString strIconPath = inioiclass_main->ReadString(_T("EXEINFO"), _T("ExeIcon"), _T(""));
+	if (!strIconPath.IsEmpty())
+	{
+		HICON hIcon = (HICON)LoadImage(
+			NULL,
+			strIconPath,
+			IMAGE_ICON,
+			32, 32,                          // 大图标
+			LR_LOADFROMFILE
+		);
+
+		if (hIcon)
+		{
+			SetIcon(hIcon, TRUE);   // 设置大图标
+			SetIcon(hIcon, FALSE);  // 设置小图标
+		}
+	}
+}
+void CGraduationProjectDlg::OnClose()
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	if (AfxMessageBox(_T("你确定要退出吗？"), MB_YESNO | MB_ICONQUESTION) == IDNO)
+	{
+		// 用户点击了“否”
+		// 不保存，直接关闭
+		return;
+	}
+	CDialogEx::OnClose();
+}
+
+void CAboutDlg::OnBnClickedOk()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CString opinion;
+	m_ContentOpinion.GetWindowText(opinion);
+	if(opinion.IsEmpty())
+	{
+		AfxMessageBox("反馈内容不能为空！");
+		return;
+	}
+	AfxMessageBox("反馈成功！");
+	CDialogEx::OnOK();
 }

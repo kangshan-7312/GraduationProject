@@ -2,6 +2,7 @@
 //
 
 #include "pch.h"
+#include "afx.h"
 #include "GraduationProject.h"
 #include "afxdialogex.h"
 #include "CLogin.h"
@@ -23,11 +24,23 @@ struct UserData
 	CString userEmali;
 };
 
+
+static CString GetExePath()
+{
+	CString strIniPath;
+	GetModuleFileName(NULL, strIniPath.GetBuffer(MAX_PATH), MAX_PATH);
+	strIniPath.ReleaseBuffer();
+	int pos = strIniPath.ReverseFind(_T('\\'));
+	strIniPath = strIniPath.Left(pos + 1) + _T("config.ini");
+	return strIniPath;
+}
+
+
 CCryptocurrency* cryptocurrency1 = new CCryptocurrency();
 CDatabaseClass* databaseclass1 = new CDatabaseClass();
 CRegistryHelper* registryhelper = new CRegistryHelper();
 CToken* tokenclass = new CToken();
-CIniOIClass* inioiclass = new CIniOIClass(".\\Config.ini");
+CIniOIClass* inioiclass = new CIniOIClass(GetExePath());
 // CLogin 对话框
 
 IMPLEMENT_DYNAMIC(CLogin, CDialogEx)
@@ -162,7 +175,20 @@ void CLogin::OnBnClickedButton2()
 void CLogin::OnClose()
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	exit(0);
+	int a = AfxMessageBox("你确定要退出吗？", MB_YESNO | MB_ICONQUESTION);
+	if (a == IDNO)
+	{
+		// 用户点击了“否”
+		// 不保存，直接关闭
+		return;
+	}
+	else if(a == IDYES)
+	{
+		// 用户点击了“是”
+		// 保存设置，然后关闭
+		// 在这里添加保存设置的代码
+		exit(0);
+	}
 	CDialogEx::OnClose();
 }
 
@@ -186,8 +212,14 @@ BOOL CLogin::PreTranslateMessage(MSG* pMsg)
 		}
 
 		// 屏蔽 Alt+F4
-		if (pMsg->wParam == VK_F4 && (GetAsyncKeyState(VK_MENU) & 0x8000))
-			return TRUE; // 拦截 Alt+F4，不关闭窗口
+		if (pMsg->message == WM_SYSKEYDOWN)  // Alt 系列组合键会走这里
+		{
+			if (pMsg->wParam == VK_F4)       // Alt+F4
+			{
+				// 屏蔽 Alt+F4，啥都不做
+				return TRUE;
+			}
+		}
 	}
 	return CDialogEx::PreTranslateMessage(pMsg);
 }
@@ -196,11 +228,45 @@ BOOL CLogin::PreTranslateMessage(MSG* pMsg)
 void CLogin::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	if (AfxMessageBox(_T("你确定要退出吗？"), MB_YESNO | MB_ICONQUESTION) == IDNO)
-	{
-		// 用户点击了“否”
-		// 不保存，直接关闭
-		return;
-	}
+
 	CDialogEx::OnSysCommand(nID, lParam);
+}
+
+BOOL CLogin::OnInitDialog()
+{
+	CDialogEx::OnInitDialog();
+
+	// TODO:  在此添加额外的初始化
+	ConfigureProgramInformation();
+	return TRUE;  // return TRUE unless you set the focus to a control
+	// 异常: OCX 属性页应返回 FALSE
+}
+
+void CLogin::ConfigureProgramInformation()
+{	
+	// 读取程序名称
+	CString strAppName = inioiclass->ReadString(_T("EXEINFO"), _T("ExeName"), _T("默认程序名"));
+	if (!strAppName.IsEmpty())
+	{
+		SetWindowText(strAppName);   // 设置窗口标题
+	}
+
+	// 读取图标路径
+	CString strIconPath = inioiclass->ReadString(_T("EXEINFO"), _T("ExeIcon"), _T(""));
+	if (!strIconPath.IsEmpty())
+	{
+		HICON hIcon = (HICON)LoadImage(
+			NULL,
+			strIconPath,
+			IMAGE_ICON,
+			32, 32,                          // 大图标
+			LR_LOADFROMFILE
+		);
+
+		if (hIcon)
+		{
+			SetIcon(hIcon, TRUE);   // 设置大图标
+			SetIcon(hIcon, FALSE);  // 设置小图标
+		}
+	}
 }

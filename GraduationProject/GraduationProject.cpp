@@ -34,7 +34,7 @@ CGraduationProjectApp::CGraduationProjectApp()
 // 唯一的 CGraduationProjectApp 对象
 
 CGraduationProjectApp theApp;
-
+ULONG_PTR m_gdiplusToken;  // GDI+ token
 
 // CGraduationProjectApp 初始化
 
@@ -52,6 +52,9 @@ BOOL CGraduationProjectApp::InitInstance()
 
 	CWinApp::InitInstance();
 
+	// 初始化 GDI+
+	GdiplusStartupInput gdiplusStartupInput;
+	GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
 
 	AfxEnableControlContainer();
 
@@ -105,3 +108,12 @@ BOOL CGraduationProjectApp::InitInstance()
 	return FALSE;
 }
 
+
+int CGraduationProjectApp::ExitInstance()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+
+	GdiplusShutdown(m_gdiplusToken); // 关闭 GDI+
+
+	return CWinApp::ExitInstance();
+}

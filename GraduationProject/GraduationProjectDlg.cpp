@@ -17,6 +17,8 @@
 #include "CRegistryHelper.h"
 #include "CMachineID.h"
 #include "CLogin.h"
+#include "CTreeControlUser.h"
+#include "CPictureShowDlg.h"
 
 
 #ifdef _DEBUG
@@ -104,6 +106,7 @@ BEGIN_MESSAGE_MAP(CGraduationProjectDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CGraduationProjectDlg::OnBnClickedButton1)
 	ON_BN_CLICKED(IDC_BUTTON4, &CGraduationProjectDlg::OnBnClickedButton4)
 	ON_WM_CLOSE()
+	ON_BN_CLICKED(IDC_BUTTON2, &CGraduationProjectDlg::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -204,6 +207,17 @@ HCURSOR CGraduationProjectDlg::OnQueryDragIcon()
 void CGraduationProjectDlg::OnBnClickedButton1()
 {
 	// TODO: 在此添加控件通知处理程序代码
+	int x = MessageBox(_T("图片预览完，按Q/q键关闭"), _T("提示"), MB_YESNO |MB_ICONINFORMATION);
+	/*
+	CString x_str;
+	x_str.Format(_T("%d"), x);
+	MessageBox(x_str);
+	*/
+	if(x == IDYES)
+	{
+		CPictureShowDlg dlg;
+		dlg.DoModal();
+	}
 }
 
 
@@ -288,4 +302,11 @@ void CAboutDlg::OnBnClickedOk()
 	}
 	AfxMessageBox("反馈成功！");
 	CDialogEx::OnOK();
+}
+
+void CGraduationProjectDlg::OnBnClickedButton2()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CTreeControlUser dlg;
+	dlg.DoModal();
 }

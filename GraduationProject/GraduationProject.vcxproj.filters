@@ -72,6 +72,15 @@
     <ClInclude Include="CToken.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CTreeControlUser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CPictureCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CPictureShowDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraduationProject.cpp">
@@ -120,6 +129,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CToken.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CTreeControlUser.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CPictureCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CPictureShowDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

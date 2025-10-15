@@ -39,4 +39,5 @@ public:
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	void ConfigureProgramInformation();
 	afx_msg void OnClose();
+	afx_msg void OnBnClickedButton2();
 };

@@ -199,9 +199,12 @@
     <ClInclude Include="CIniOIClass.h" />
     <ClInclude Include="CLogin.h" />
     <ClInclude Include="CMachineID.h" />
+    <ClInclude Include="CPictureCtrl.h" />
+    <ClInclude Include="CPictureShowDlg.h" />
     <ClInclude Include="CRegistrationDlg.h" />
     <ClInclude Include="CRegistryHelper.h" />
     <ClInclude Include="CToken.h" />
+    <ClInclude Include="CTreeControlUser.h" />
     <ClInclude Include="CUdpClient.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraduationProject.h" />
@@ -220,9 +223,12 @@
     <ClCompile Include="CIniOIClass.cpp" />
     <ClCompile Include="CLogin.cpp" />
     <ClCompile Include="CMachineID.cpp" />
+    <ClCompile Include="CPictureCtrl.cpp" />
+    <ClCompile Include="CPictureShowDlg.cpp" />
     <ClCompile Include="CRegistrationDlg.cpp" />
     <ClCompile Include="CRegistryHelper.cpp" />
     <ClCompile Include="CToken.cpp" />
+    <ClCompile Include="CTreeControlUser.cpp" />
     <ClCompile Include="CUdpClient.cpp" />
     <ClCompile Include="GraduationProject.cpp" />
     <ClCompile Include="GraduationProjectDlg.cpp" />

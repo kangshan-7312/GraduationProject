@@ -28,4 +28,6 @@ public:
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	void SetInputMethod(HWND hWnd, DWORD mode);
+public:
+	CString image_path;
 };

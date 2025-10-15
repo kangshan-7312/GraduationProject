@@ -19,6 +19,7 @@
 #include "CLogin.h"
 #include "CTreeControlUser.h"
 #include "CPictureShowDlg.h"
+#include "CPictureCtrl.h"
 
 
 #ifdef _DEBUG
@@ -43,6 +44,7 @@ CUdpClient* udpclient = new CUdpClient();
 CFileEncryptor* fileencryptor = new CFileEncryptor();
 CRegistryHelper* registry = new CRegistryHelper();
 CMachineID* machineid = new CMachineID();
+CPictureCtrl* picturectrl = new CPictureCtrl();
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -207,17 +209,7 @@ HCURSOR CGraduationProjectDlg::OnQueryDragIcon()
 void CGraduationProjectDlg::OnBnClickedButton1()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	int x = MessageBox(_T("图片预览完，按Q/q键关闭"), _T("提示"), MB_YESNO |MB_ICONINFORMATION);
-	/*
-	CString x_str;
-	x_str.Format(_T("%d"), x);
-	MessageBox(x_str);
-	*/
-	if(x == IDYES)
-	{
-		CPictureShowDlg dlg;
-		dlg.DoModal();
-	}
+	picturectrl->ShowImage("C:\\Users\\kangs\\Pictures\\Screenshots\\777.png");
 }
 
 

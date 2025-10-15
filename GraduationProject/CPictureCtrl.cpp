@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "CPictureCtrl.h"
+#include "CPictureShowDlg.h"
+#include <io.h> // 添加此头文件
 
 CPictureCtrl::CPictureCtrl()
 {
@@ -87,4 +89,24 @@ void CPictureCtrl::OnSize(UINT nType, int cx, int cy)
 {
     CStatic::OnSize(nType, cx, cy);
     Invalidate();
+}
+
+void CPictureCtrl::ShowImage(CString path)
+{
+    // 判断文件是否存在
+    if (_access(path, 0) != 0)
+    {
+        MessageBox(_T("指定的图片文件不存在！"), _T("错误"), MB_ICONERROR);
+        return;
+    }
+    else
+    {
+        int x = MessageBox(_T("图片预览完，按Q/q键关闭"), _T("提示"), MB_YESNO | MB_ICONINFORMATION);
+        if (x == IDYES)
+        {
+            CPictureShowDlg dlg;
+            dlg.image_path = _T(path);
+            dlg.DoModal();
+        }
+    }
 }

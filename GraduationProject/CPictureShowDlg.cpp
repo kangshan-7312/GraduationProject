@@ -51,7 +51,7 @@ BOOL CPictureShowDlg::OnInitDialog()
 	GetClientRect(&rect);
 	m_picCtrl.MoveWindow(rect);
 
-	m_picCtrl.LoadImageFile(_T("C:\\Users\\kangs\\Pictures\\Screenshots\\6.png"));
+	m_picCtrl.LoadImageFile(_T(image_path));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE

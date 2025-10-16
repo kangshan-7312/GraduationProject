@@ -40,4 +40,15 @@ public:
 	void ConfigureProgramInformation();
 	afx_msg void OnClose();
 	afx_msg void OnBnClickedButton2();
+	CMFCShellTreeCtrl m_wndShellTree;
+	afx_msg void OnBnClickedButton5();
+	afx_msg void OnTvnSelchangedMfcshelltree1(NMHDR* pNMHDR, LRESULT* pResult);
+	void GetFilesInFolder(const CString& folderPath);
+	CImageList m_imageList; // 对话框成员变量
+
+	afx_msg void OnSize(UINT nType, int cx, int cy);
+	afx_msg void OnGetMinMaxInfo(MINMAXINFO* lpMMI);
+	afx_msg void OnBnClickedButton6();
+	int colRatios[7];    // 列表A 的列宽比例
+	int colRatiosB[7];  // 列表B 的列宽比例
 };

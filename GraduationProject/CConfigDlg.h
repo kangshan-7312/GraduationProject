@@ -40,4 +40,6 @@ public:
 	CEdit m_exe_name;
 	afx_msg void OnBnClickedButton10();
 	afx_msg void OnBnClickedButton9();
+	void SetChildMode(bool bChildMode);
+	virtual void OnCancel();
 };

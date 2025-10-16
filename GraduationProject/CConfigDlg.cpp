@@ -6,6 +6,8 @@
 #include "afxdialogex.h"
 #include "CConfigDlg.h"
 #include "CIniOIClass.h"
+#include "CSystemAllInfoDlg.h"
+#include "CLogin.h"
 
 static CString GetExePath()
 {
@@ -18,6 +20,7 @@ static CString GetExePath()
 }
 
 CIniOIClass* inioiclass2 = new CIniOIClass(GetExePath());
+CSystemAllInfoDlg* g_pSystemAllInfoDlg3 = nullptr;
 // CConfigDlg 对话框
 
 IMPLEMENT_DYNAMIC(CConfigDlg, CDialogEx)
@@ -184,4 +187,37 @@ void CConfigDlg::OnBnClickedButton9()
 	inioiclass2->WriteString("EXEINFO", "ExeIcon", exe_ico_path);
 	inioiclass2->WriteString("EXEINFO", "ExeName", exe_name);	
 	MessageBox("设置成功!");
+}
+
+
+void CConfigDlg::SetChildMode(bool bChildMode)
+{
+	if (bChildMode)
+	{
+		// 嵌入 Tab
+		// 父窗口设置为 Tab
+		ModifyStyle(WS_CAPTION | WS_SYSMENU | WS_THICKFRAME, WS_CHILD);
+		ModifyStyleEx(WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE, 0);
+	}
+	else
+	{
+		// 独立弹出
+		SetParent(NULL);  // 父窗口置空
+		ModifyStyle(WS_CHILD, WS_CAPTION | WS_SYSMENU | WS_THICKFRAME);
+		ModifyStyleEx(0, WS_EX_CLIENTEDGE);
+	}
+}
+void CConfigDlg::OnCancel()
+{
+	// TODO: 在此添加专用代码和/或调用基类
+	CWnd* pOwner = GetOwner();
+	if (pOwner)
+	{
+		CLogin* pMain = dynamic_cast<CLogin*>(pOwner);
+		if (pMain)
+			pMain->configdlg2 = nullptr;
+	}
+
+	DestroyWindow();
+	CDialogEx::OnCancel();
 }

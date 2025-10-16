@@ -2,6 +2,8 @@
 #include "CPictureCtrl.h"
 #include "CPictureShowDlg.h"
 #include <io.h> // 添加此头文件
+#include <urlmon.h>
+#pragma comment(lib, "urlmon.lib")
 
 CPictureCtrl::CPictureCtrl()
 {
@@ -110,3 +112,22 @@ void CPictureCtrl::ShowImage(CString path)
         }
     }
 }
+
+BOOL CPictureCtrl::DownloadImageFromURL(const CString& strURL, const CString& strSavePath)
+{
+    // 使用CA2A将CString转换为LPCSTR
+    USES_CONVERSION;
+    LPCSTR szURL = T2CA(strURL);
+    LPCSTR szSavePath = T2CA(strSavePath);
+
+    HRESULT hr = URLDownloadToFileA(
+        NULL,           // 无绑定上下文
+        szURL,          // URL（LPCSTR）
+        szSavePath,     // 本地保存路径（LPCSTR）
+        0,              // 保留，必须为0
+        NULL            // 回调接口
+    );
+    return SUCCEEDED(hr);
+}
+
+

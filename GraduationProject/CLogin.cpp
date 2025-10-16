@@ -41,6 +41,7 @@ CDatabaseClass* databaseclass1 = new CDatabaseClass();
 CRegistryHelper* registryhelper = new CRegistryHelper();
 CToken* tokenclass = new CToken();
 CIniOIClass* inioiclass = new CIniOIClass(GetExePath());
+
 // CLogin 对话框
 
 IMPLEMENT_DYNAMIC(CLogin, CDialogEx)
@@ -69,6 +70,7 @@ BEGIN_MESSAGE_MAP(CLogin, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2, &CLogin::OnBnClickedButton2)
 	ON_WM_CLOSE()
 	ON_WM_SYSCOMMAND()
+	ON_BN_CLICKED(IDC_BUTTON3, &CLogin::OnBnClickedButton3)
 END_MESSAGE_MAP()
 
 
@@ -167,8 +169,37 @@ void CLogin::OnBnClickedButton1()
 void CLogin::OnBnClickedButton2()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CConfigDlg dlg;
-	dlg.DoModal();
+	if ((configdlg2 && ::IsWindow(configdlg2->GetSafeHwnd())))
+	{
+		return;
+	}
+	// 设置弹出窗口大小
+	int nWidth = 975;
+	int nHeight = 750;
+	 // 获取屏幕尺寸
+	int nScreenWidth = GetSystemMetrics(SM_CXSCREEN);
+	int nScreenHeight = GetSystemMetrics(SM_CYSCREEN);
+	// 计算左上角坐标，实现居中
+	int nX = (nScreenWidth - nWidth) / 2;
+	int nY = (nScreenHeight - nHeight) / 2;
+
+
+	// 创建并显示弹出窗口
+	configdlg2 = new CConfigDlg();
+	configdlg2->Create(IDD_DIALOG4, NULL); // 父窗口可为主对话框
+	configdlg2->SetParent(NULL);
+	configdlg2->SetChildMode(0);
+
+
+	// 移动窗口并刷新样式，同时设置为置顶
+	configdlg2->SetWindowPos(&CWnd::wndTopMost, nX, nY, nWidth, nHeight,
+			SWP_FRAMECHANGED | SWP_SHOWWINDOW);
+	// 设置窗口标题
+	configdlg2->SetWindowText(_T("连接配置"));
+	
+	//MessageBox("请在配置完成后，点击保存按钮保存配置，然后关闭此窗口！");
+	//etDlgItem(IDC_TAB_MAIN)->EnableWindow(FALSE); // 禁用 Tab 控件，模拟模态效果
+	configdlg2->SetOwner(this);
 }
 
 
@@ -237,6 +268,7 @@ BOOL CLogin::OnInitDialog()
 	CDialogEx::OnInitDialog();
 
 	// TODO:  在此添加额外的初始化
+	configdlg2 = nullptr;
 	ConfigureProgramInformation();
 	return TRUE;  // return TRUE unless you set the focus to a control
 	// 异常: OCX 属性页应返回 FALSE
@@ -269,4 +301,11 @@ void CLogin::ConfigureProgramInformation()
 			SetIcon(hIcon, FALSE);  // 设置小图标
 		}
 	}
+}
+
+void CLogin::OnBnClickedButton3()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	CSystemAllInfoDlg dlg;
+	dlg.DoModal();
 }

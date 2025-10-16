@@ -1,6 +1,8 @@
 ﻿#pragma once
 #include "afxdialogex.h"
 #include <string>
+#include "CSystemAllInfoDlg.h"
+#include "CConfigDlg.h"
 
 
 // CLogin 对话框
@@ -34,4 +36,6 @@ public:
 	void LoginFun();
 	virtual BOOL OnInitDialog();
 	void ConfigureProgramInformation();
+	afx_msg void OnBnClickedButton3();
+	CConfigDlg* configdlg2;
 };

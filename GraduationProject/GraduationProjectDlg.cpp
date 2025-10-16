@@ -1,5 +1,4 @@
-﻿
-// GraduationProjectDlg.cpp: 实现文件
+﻿// GraduationProjectDlg.cpp: 实现文件
 //
 
 #include "pch.h"
@@ -20,11 +19,22 @@
 #include "CTreeControlUser.h"
 #include "CPictureShowDlg.h"
 #include "CPictureCtrl.h"
+#include "CSystemAllInfoDlg.h"
 
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
+
+struct CtlInfo
+{
+	CWnd* pWnd;
+	CRect rect;    // 初始位置大小
+	int id;        // 控件ID，可选
+};
+CArray<CtlInfo, CtlInfo&> m_arrCtlInfo;
+CRect m_rectDlg;  // 对话框初始大小
 
 static CString GetExePath()
 {
@@ -45,6 +55,7 @@ CFileEncryptor* fileencryptor = new CFileEncryptor();
 CRegistryHelper* registry = new CRegistryHelper();
 CMachineID* machineid = new CMachineID();
 CPictureCtrl* picturectrl = new CPictureCtrl();
+CSystemAllInfoDlg* systemallinfodlg = new CSystemAllInfoDlg();
 
 // 用于应用程序“关于”菜单项的 CAboutDlg 对话框
 
@@ -99,6 +110,7 @@ void CGraduationProjectDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST1, m_message_list);
 	DDX_Control(pDX, IDC_LIST2, m_user_list);
+	DDX_Control(pDX, IDC_MFCSHELLTREE1, m_wndShellTree);
 }
 
 BEGIN_MESSAGE_MAP(CGraduationProjectDlg, CDialogEx)
@@ -109,6 +121,11 @@ BEGIN_MESSAGE_MAP(CGraduationProjectDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON4, &CGraduationProjectDlg::OnBnClickedButton4)
 	ON_WM_CLOSE()
 	ON_BN_CLICKED(IDC_BUTTON2, &CGraduationProjectDlg::OnBnClickedButton2)
+	ON_BN_CLICKED(IDC_BUTTON5, &CGraduationProjectDlg::OnBnClickedButton5)
+	ON_NOTIFY(TVN_SELCHANGED, IDC_MFCSHELLTREE1, &CGraduationProjectDlg::OnTvnSelchangedMfcshelltree1)
+	ON_WM_SIZE()
+	ON_WM_GETMINMAXINFO()
+	ON_BN_CLICKED(IDC_BUTTON6, &CGraduationProjectDlg::OnBnClickedButton6)
 END_MESSAGE_MAP()
 
 
@@ -150,7 +167,78 @@ BOOL CGraduationProjectDlg::OnInitDialog()
 		AfxMessageBox(_T("COM 初始化失败"));
 		return FALSE;
 	}
+
+
+
+	//初始化列表控件
+	// 设置样式：全行选择 + 栅格线
+	m_message_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+	// 插入列
+	m_message_list.InsertColumn(0, _T("图标"), LVCFMT_CENTER, 50);
+	m_message_list.InsertColumn(1, _T("时间"), LVCFMT_CENTER, 200);
+	m_message_list.InsertColumn(2, _T("文件名"), LVCFMT_CENTER, 300);
+	m_message_list.InsertColumn(3, _T("文件大小"), LVCFMT_CENTER, 100);
+	m_message_list.InsertColumn(4, _T("文件类型"), LVCFMT_CENTER, 100);
+	m_message_list.InsertColumn(5, _T("创建日期"), LVCFMT_CENTER, 200);
+	m_message_list.InsertColumn(6, _T("完整路径"), LVCFMT_CENTER, 450);
+
+	m_imageList.Create(32, 32, ILC_COLOR32, 0, 1); // 小图标
+	m_message_list.SetImageList(&m_imageList, LVSIL_SMALL);
+
+
+	// 保存对话框客户区初始大小
+	GetClientRect(&m_rectDlg);
+
+	// 遍历所有子控件
+	CWnd* pWndChild = GetWindow(GW_CHILD);
+	while (pWndChild)
+	{
+		CtlInfo info;
+		info.pWnd = pWndChild;
+		info.id = pWndChild->GetDlgCtrlID();
+		pWndChild->GetWindowRect(&info.rect);
+		ScreenToClient(&info.rect); // 转成客户区坐标
+		m_arrCtlInfo.Add(info);
+
+		pWndChild = pWndChild->GetNextWindow();
+	}
+
+
+
+	colRatios[0] = inioiclass_main->ReadInt(_T("ColumnWidthConfig"), _T("image"), 0);
+	colRatios[1] = inioiclass_main->ReadInt(_T("ColumnWidthConfig"), _T("time"), 0);
+	colRatios[2] = inioiclass_main->ReadInt(_T("ColumnWidthConfig"), _T("file_name"), 0);
+	colRatios[3] = inioiclass_main->ReadInt(_T("ColumnWidthConfig"), _T("file_size"), 0);
+	colRatios[4] = inioiclass_main->ReadInt(_T("ColumnWidthConfig"), _T("file_type"), 0);
+	colRatios[5] = inioiclass_main->ReadInt(_T("ColumnWidthConfig"), _T("file_time"), 0);
+	colRatios[6] = inioiclass_main->ReadInt(_T("ColumnWidthConfig"), _T("all_file_path"), 0);
+
+	colRatiosB[0] = inioiclass_main->ReadInt(_T("UserListColumnWidthConfig"), _T("ID"), 0);
+	colRatiosB[1] = inioiclass_main->ReadInt(_T("UserListColumnWidthConfig"), _T("name"), 0);
+	colRatiosB[2] = inioiclass_main->ReadInt(_T("UserListColumnWidthConfig"), _T("info"), 0);
+	colRatiosB[3] = inioiclass_main->ReadInt(_T("UserListColumnWidthConfig"), _T("Permission"), 0);
+	colRatiosB[4] = inioiclass_main->ReadInt(_T("UserListColumnWidthConfig"), _T("Launch_time"), 0);
+	colRatiosB[5] = inioiclass_main->ReadInt(_T("UserListColumnWidthConfig"), _T("addr"), 0);
+	colRatiosB[6] = inioiclass_main->ReadInt(_T("UserListColumnWidthConfig"), _T("Other"), 0);
+
 	// TODO: 在此添加额外的初始化代码
+
+
+	m_user_list.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+	m_user_list.InsertColumn(0, _T("用户ID"), LVCFMT_CENTER, 150);
+	m_user_list.InsertColumn(1, _T("用户名"), LVCFMT_CENTER, 150);
+	m_user_list.InsertColumn(2, _T("用户信息"), LVCFMT_CENTER, 200);
+	m_user_list.InsertColumn(3, _T("权限"), LVCFMT_CENTER, 100);
+	m_user_list.InsertColumn(4, _T("上线时间"), LVCFMT_CENTER, 200);
+	m_user_list.InsertColumn(5, _T("地址"), LVCFMT_CENTER, 200);
+	m_user_list.InsertColumn(6, _T("其他"), LVCFMT_CENTER, 100);
+
+
+
+
+
+	//加载用户列表数据（使用线程）
+
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
@@ -216,8 +304,8 @@ void CGraduationProjectDlg::OnBnClickedButton1()
 void CGraduationProjectDlg::OnBnClickedButton4()
 {
 	// TODO: 在此添加控件通知处理程序代码
-	CLogin dlg;
-	dlg.DoModal();
+	picturectrl->DownloadImageFromURL("https://s1.aigei.com/src/img/jpg/34/342e6d84d3b1424aa269bc5d8220c675.jpg?download/%E7%94%B5%E8%84%91%E5%8A%A8%E6%BC%AB%E5%A3%81%E7%BA%B8_%E7%88%B1%E7%BB%99%E7%BD%91_aigei_com.jpg&e=1760529960&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:xyaZm7XFSsoaaB5KR6um8gXAjho=&s=978009&t=04044fd953d14a74996c01f0d3687eb4", ".\\1.png");
+	picturectrl->ShowImage(".\\1.png");
 }
 
 
@@ -301,4 +389,153 @@ void CGraduationProjectDlg::OnBnClickedButton2()
 	// TODO: 在此添加控件通知处理程序代码
 	CTreeControlUser dlg;
 	dlg.DoModal();
+}
+
+CString strPath;
+void CGraduationProjectDlg::OnBnClickedButton5()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	if(strPath.IsEmpty())
+	{
+		AfxMessageBox("请先选择文件夹！");
+		return;
+	}
+	GetFilesInFolder(strPath);
+}
+
+
+void CGraduationProjectDlg::OnTvnSelchangedMfcshelltree1(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMTREEVIEW pNMTreeView = reinterpret_cast<LPNMTREEVIEW>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	HTREEITEM hItem = m_wndShellTree.GetSelectedItem();
+	if (hItem != NULL)
+	{
+		m_wndShellTree.GetItemPath(strPath, hItem); // 修正：传入CString&和HTREEITEM
+	}
+	*pResult = 0;
+}
+
+
+
+void CGraduationProjectDlg::GetFilesInFolder(const CString& folderPath)
+{
+	m_message_list.DeleteAllItems(); // 清空列表
+
+	CFileFind finder;
+	CString searchPath = folderPath + _T("\\*.*");
+	BOOL bWorking = finder.FindFile(searchPath);
+
+	while (bWorking)
+	{
+		bWorking = finder.FindNextFile();
+
+		if (finder.IsDots()) continue; // 跳过 "." ".."
+		if (finder.IsDirectory()) continue; // 跳过文件夹
+
+		CString fileName = finder.GetFileName();
+		CString fullPath = finder.GetFilePath();
+
+		// 文件大小
+		ULONGLONG fileSize = finder.GetLength();
+		CString strSize;
+		strSize.Format(_T("%llu KB"), fileSize / 1024);
+
+		// 文件类型（扩展名）
+		CString fileType = PathFindExtension(fileName); // 带点
+		if (!fileType.IsEmpty() && fileType[0] == _T('.'))
+			fileType = fileType.Mid(1);
+
+		// 创建日期
+		CTime createTime;
+		finder.GetCreationTime(createTime);
+		CString strCreateTime = createTime.Format(_T("%Y-%m-%d %H:%M:%S"));
+
+		// 获取文件小图标
+		SHFILEINFO sfi;
+		HIMAGELIST hImgList = (HIMAGELIST)SHGetFileInfo(fullPath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi),
+			SHGFI_SMALLICON | SHGFI_ICON | SHGFI_USEFILEATTRIBUTES);
+
+		int imageIndex = m_imageList.Add(sfi.hIcon); // 添加到图像列表
+		::DestroyIcon(sfi.hIcon); // 释放临时图标
+
+		// 插入到列表控件
+		CTime currentTime = CTime::GetCurrentTime();  // 获取系统当前时间
+		CString strTime = currentTime.Format(_T("%Y-%m-%d %H:%M:%S")); // 格式化
+		int nIndex = m_message_list.InsertItem(m_message_list.GetItemCount(), _T(""), imageIndex); // 第一列显示图标
+		m_message_list.SetItemText(nIndex, 1, strTime);// 第一列显示图标
+		m_message_list.SetItemText(nIndex, 2, fileName);
+		m_message_list.SetItemText(nIndex, 3, strSize);
+		m_message_list.SetItemText(nIndex, 4, fileType);
+		m_message_list.SetItemText(nIndex, 5, strCreateTime);
+		m_message_list.SetItemText(nIndex, 6, fullPath);
+	}
+}
+
+
+void CGraduationProjectDlg::OnSize(UINT nType, int cx, int cy)
+{
+	CDialogEx::OnSize(nType, cx, cy);
+
+	// TODO: 在此处添加消息处理程序代码
+	if (m_arrCtlInfo.GetSize() == 0) return; // 初始还没创建
+
+	float fWidthRatio = (float)cx / m_rectDlg.Width();
+	float fHeightRatio = (float)cy / m_rectDlg.Height();
+
+	for (int i = 0; i < m_arrCtlInfo.GetSize(); i++)
+	{
+		CtlInfo& info = m_arrCtlInfo[i];
+		CRect newRect;
+		newRect.left = (LONG)(info.rect.left * fWidthRatio);
+		newRect.top = (LONG)(info.rect.top * fHeightRatio);
+		newRect.right = (LONG)(info.rect.right * fWidthRatio);
+		newRect.bottom = (LONG)(info.rect.bottom * fHeightRatio);
+
+		// 调整控件位置和大小
+		info.pWnd->MoveWindow(newRect);
+
+		// 如果是列表控件，调整列宽
+		if (info.pWnd->IsKindOf(RUNTIME_CLASS(CListCtrl)))
+		{
+			CListCtrl* pList = (CListCtrl*)info.pWnd;
+			int nCtrlID = pList->GetDlgCtrlID();  // 获取控件ID
+
+			int* ratios = nullptr;
+
+			if (nCtrlID == IDC_LIST1)        // 第一个列表
+				ratios = colRatios;
+			else if (nCtrlID == IDC_LIST2)   // 第二个列表
+				ratios = colRatiosB;
+			else
+				return;
+
+			int nCols = pList->GetHeaderCtrl()->GetItemCount();
+			if (nCols > 0)
+			{
+				int totalWidth = newRect.Width();
+
+				for (int col = 0; col < nCols; col++)
+				{
+					int colWidth = totalWidth * ratios[col] / 100;
+					pList->SetColumnWidth(col, colWidth);
+				}
+			}
+		}
+	}
+}
+
+void CGraduationProjectDlg::OnGetMinMaxInfo(MINMAXINFO* lpMMI)
+{
+	// TODO: 在此添加消息处理程序代码和/或调用默认值
+	// 设置最小宽度和高度
+	lpMMI->ptMinTrackSize.x = 1000; // 最小宽度
+	lpMMI->ptMinTrackSize.y = 800; // 最小高度
+	CDialogEx::OnGetMinMaxInfo(lpMMI);
+}
+
+void CGraduationProjectDlg::OnBnClickedButton6()
+{
+	// TODO: 在此添加控件通知处理程序代码
+	systemallinfodlg->DoModal();
 }

@@ -24,11 +24,21 @@ struct UserData
 	CString userEmali;
 };
 
+static CString GetExePath()
+{
+	CString strIniPath;
+	GetModuleFileName(NULL, strIniPath.GetBuffer(MAX_PATH), MAX_PATH);
+	strIniPath.ReleaseBuffer();
+	int pos = strIniPath.ReverseFind(_T('\\'));
+	strIniPath = strIniPath.Left(pos + 1) + _T("config.ini");
+	return strIniPath;
+}
+
 CCryptocurrency* cryptocurrency2 = new CCryptocurrency();
 CDatabaseClass* databaseclass2 = new CDatabaseClass();
 CRegistryHelper* registryhelper2 = new CRegistryHelper();
 CMachineID* machineid1 = new CMachineID();
-CIniOIClass* inioiclass3 = new CIniOIClass(".\\Config.ini");
+CIniOIClass* inioiclass3 = new CIniOIClass(GetExePath());
 
 
 // CRegistrationDlg 对话框

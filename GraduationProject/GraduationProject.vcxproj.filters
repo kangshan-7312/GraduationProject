@@ -81,6 +81,15 @@
     <ClInclude Include="CPictureShowDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CSystemAllInfoDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CConfig2.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CConfig1.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraduationProject.cpp">
@@ -138,6 +147,15 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CPictureShowDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CSystemAllInfoDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CConfig2.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CConfig1.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

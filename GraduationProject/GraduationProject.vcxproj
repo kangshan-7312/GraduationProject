@@ -190,6 +190,8 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CConfig1.h" />
+    <ClInclude Include="CConfig2.h" />
     <ClInclude Include="CConfigDlg.h" />
     <ClInclude Include="CCryptocurrency.h" />
     <ClInclude Include="CDatabaseClass.h" />
@@ -203,6 +205,7 @@
     <ClInclude Include="CPictureShowDlg.h" />
     <ClInclude Include="CRegistrationDlg.h" />
     <ClInclude Include="CRegistryHelper.h" />
+    <ClInclude Include="CSystemAllInfoDlg.h" />
     <ClInclude Include="CToken.h" />
     <ClInclude Include="CTreeControlUser.h" />
     <ClInclude Include="CUdpClient.h" />
@@ -214,6 +217,8 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CConfig1.cpp" />
+    <ClCompile Include="CConfig2.cpp" />
     <ClCompile Include="CConfigDlg.cpp" />
     <ClCompile Include="CCryptocurrency.cpp" />
     <ClCompile Include="CDatabaseClass.cpp" />
@@ -227,6 +232,7 @@
     <ClCompile Include="CPictureShowDlg.cpp" />
     <ClCompile Include="CRegistrationDlg.cpp" />
     <ClCompile Include="CRegistryHelper.cpp" />
+    <ClCompile Include="CSystemAllInfoDlg.cpp" />
     <ClCompile Include="CToken.cpp" />
     <ClCompile Include="CTreeControlUser.cpp" />
     <ClCompile Include="CUdpClient.cpp" />

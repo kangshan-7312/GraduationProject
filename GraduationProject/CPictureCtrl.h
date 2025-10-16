@@ -17,5 +17,6 @@ private:
     Gdiplus::Image* m_pImage;
 public:
 	void ShowImage(CString path);
+	BOOL DownloadImageFromURL(const CString& strURL, const CString& strSavePath);//обтьм╪ф╛
 };
 

@@ -20,7 +20,8 @@
 #include "CPictureShowDlg.h"
 #include "CPictureCtrl.h"
 #include "CSystemAllInfoDlg.h"
-
+#include "CClipboardOperations.h"
+#include "CShowFileInfoDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -126,6 +127,13 @@ BEGIN_MESSAGE_MAP(CGraduationProjectDlg, CDialogEx)
 	ON_WM_SIZE()
 	ON_WM_GETMINMAXINFO()
 	ON_BN_CLICKED(IDC_BUTTON6, &CGraduationProjectDlg::OnBnClickedButton6)
+	ON_NOTIFY(NM_RCLICK, IDC_LIST1, &CGraduationProjectDlg::OnNMRClickList1)
+	ON_COMMAND(ID_LIST1_COPY_FILE_NAME, &CGraduationProjectDlg::OnList1CopyFileName)
+	ON_COMMAND(ID_LIST1_COPY_FILE_PATH, &CGraduationProjectDlg::OnList1CopyFilePath)
+	ON_COMMAND(ID_LIST1_DELETE_FILE, &CGraduationProjectDlg::OnList1DeleteFile)
+	ON_COMMAND(ID_LIST1_OPEN_FILE, &CGraduationProjectDlg::OnList1OpenFile)
+	ON_COMMAND(ID_LIST1_OPEN_INFO, &CGraduationProjectDlg::OnList1OpenInfo)
+	ON_NOTIFY(NM_DBLCLK, IDC_MFCSHELLTREE1, &CGraduationProjectDlg::OnNMDblclkMfcshelltree1)
 END_MESSAGE_MAP()
 
 
@@ -538,4 +546,169 @@ void CGraduationProjectDlg::OnBnClickedButton6()
 {
 	// TODO: 在此添加控件通知处理程序代码
 	systemallinfodlg->DoModal();
+}
+
+
+int iItem = 0;
+void CGraduationProjectDlg::OnNMRClickList1(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	// TODO: 在此添加控件通知处理程序代码
+	for (iItem = m_message_list.GetItemCount(); iItem >= 0; iItem--)
+	{
+		if (LVIS_SELECTED == m_message_list.GetItemState(iItem, LVIS_SELECTED))     //发现选中行
+		{
+			break;
+		}
+	}
+
+
+	//MessageBox("获取右键点击事件！");
+
+	do
+	{
+		LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+		//LPNMITEMACTIVATE pNMItemActivate = LPNMITEMACTIVATE(pNMHDR);
+		//判断列表是否为空
+		if (m_message_list.GetItemCount() <= 0)
+		{
+			break;
+		}
+		//判断是否有列表选中
+		if (m_message_list.GetSelectedCount() > 0)
+		{
+			CMenu menu, * popup;
+			//添加的主菜单
+			if (menu.LoadMenu(IDR_MENU1) == NULL)
+			{
+				break;
+			}
+
+			//获取要显示菜单的句柄（0表示第一个）
+			popup = menu.GetSubMenu(0);
+
+			//位置信息
+			CPoint point;
+			ClientToScreen(&point);
+			GetCursorPos(&point);
+			popup->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, point.x, point.y, this);
+			*pResult = 0;
+		}
+
+	} while (FALSE);
+
+
+	*pResult = 0;
+}
+
+
+// 下面是各个右键菜单命令的处理程序
+
+// “复制文件名”命令
+void CGraduationProjectDlg::OnList1CopyFileName()
+{
+	// TODO: 在此添加命令处理程序代码
+	//MessageBox("复制文件名命令被触发！");
+	CString text = m_message_list.GetItemText(iItem, 2);   // 获取第3行第4列内容
+	CClipboardOperations dlg;
+	dlg.SetClipboardText(text);
+}
+
+// “复制文件路径”命令
+void CGraduationProjectDlg::OnList1CopyFilePath()
+{
+	// TODO: 在此添加命令处理程序代码
+	MessageBox("复制文件路径命令被触发！");
+	CString text = m_message_list.GetItemText(iItem, 6);   // 获取第3行第6列内容
+	CClipboardOperations dlg;
+	dlg.SetClipboardText(text);
+}
+
+
+// “删除文件”命令
+void CGraduationProjectDlg::OnList1DeleteFile()
+{
+	// TODO: 在此添加命令处理程序代码
+	//MessageBox("删除文件命令被触发！");
+
+	CString filePath = m_message_list.GetItemText(iItem, 6);   // 获取第3行第6列内容
+
+	if (DeleteFile(filePath))
+	{
+		AfxMessageBox(_T("删除成功"));
+		m_message_list.DeleteItem(iItem); // 从列表中移除该项
+	}
+	else
+	{
+		DWORD dwError = GetLastError();
+		CString strErr;
+		strErr.Format(_T("删除失败，错误码: %d"), dwError);
+		AfxMessageBox(strErr);
+	}
+
+}
+
+
+// “打开文件”命令
+void CGraduationProjectDlg::OnList1OpenFile()
+{
+	// TODO: 在此添加命令处理程序代码
+	//MessageBox("打开文件命令被触发！");
+	CString filePath = m_message_list.GetItemText(iItem, 6);   // 获取第iItem行第6列内容
+	CString filename = m_message_list.GetItemText(iItem, 2);   // 获取第iItem行第2列内容
+	CString fileSuffix = m_message_list.GetItemText(iItem, 4);   // 获取第iItem行第4列内容
+	if (fileSuffix == _T("txt") || fileSuffix == _T("ini") || fileSuffix == _T("log"))
+	{
+		// 用MFC读取文本
+		CStdioFile file;
+		if (file.Open(filePath, CFile::modeRead | CFile::typeText))
+		{
+			CString line, content;
+			while (file.ReadString(line))
+				content += line + _T("\r\n");
+			file.Close();
+
+			AfxMessageBox(content.Left(2000)); // 示例显示前2000字符
+		}
+	}
+	else if (fileSuffix == _T("jpg") || fileSuffix == _T("png") || fileSuffix == _T("bmp") || fileSuffix == _T("jpeg"))
+	{
+		// 用 GDI+ 在控件/窗口中显示
+		//（你之前已使用过 Gdiplus::Image 或 CStatic + OnPaint）
+		picturectrl->ShowImage(filePath);
+	}
+	else if (fileSuffix == _T("pdf") || fileSuffix == _T("doc") || fileSuffix == _T("docx") ||
+		fileSuffix == _T("xls") || fileSuffix == _T("xlsx"))
+	{
+		// 用系统关联程序打开
+		ShellExecute(NULL, _T("open"), filePath, NULL, NULL, SW_SHOWNORMAL);
+	}
+	else
+	{
+		// 其他类型，默认调用系统打开
+		ShellExecute(NULL, _T("open"), filePath, NULL, NULL, SW_SHOWNORMAL);
+	}
+
+}
+
+
+// “查看文件信息”命令
+void CGraduationProjectDlg::OnList1OpenInfo()
+{
+	// TODO: 在此添加命令处理程序代码
+	//MessageBox("查看文件信息命令被触发！");
+	CShowFileInfoDlg dlg;
+
+	CString filePath = m_message_list.GetItemText(iItem, 6);   // 获取第3行第6列内容
+	//把数据传进去
+	dlg.SetFileInfo(iItem, filePath);
+
+	dlg.DoModal();
+}
+
+void CGraduationProjectDlg::OnNMDblclkMfcshelltree1(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	// TODO: 在此添加控件通知处理程序代码
+	MessageBox("双击事件触发！");
+	*pResult = 0;
 }

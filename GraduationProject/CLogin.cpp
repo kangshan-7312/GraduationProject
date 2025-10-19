@@ -134,9 +134,9 @@ void CLogin::LoginFun()
 				database.userPassword = results[i].columns[2];
 				if (database.userID == cryptocurrency1->AESEncrypt(only_id, "200958ks") && database.userName == user && database.userPassword == cryptocurrency1->GetMD5Hash(password))
 				{
-					MessageBox("登录成功!");
-					CString nowtime = tokenclass->GetSystemTime();
-					MessageBox(tokenclass->AddSeconds(nowtime, 360));
+					//MessageBox("登录成功!");
+					//CString nowtime = tokenclass->GetSystemTime();
+					//MessageBox(tokenclass->AddSeconds(nowtime, 360));
 					EndDialog(0);
 				}
 				else

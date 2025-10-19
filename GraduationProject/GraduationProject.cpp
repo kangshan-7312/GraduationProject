@@ -55,6 +55,8 @@ BOOL CGraduationProjectApp::InitInstance()
 	// 初始化 GDI+
 	GdiplusStartupInput gdiplusStartupInput;
 	GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
+	// 初始化 OLE 库
+	HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 
 	AfxEnableControlContainer();
 
@@ -114,6 +116,6 @@ int CGraduationProjectApp::ExitInstance()
 	// TODO: 在此添加专用代码和/或调用基类
 
 	GdiplusShutdown(m_gdiplusToken); // 关闭 GDI+
-
+	CoUninitialize(); // 关闭 OLE 库
 	return CWinApp::ExitInstance();
 }

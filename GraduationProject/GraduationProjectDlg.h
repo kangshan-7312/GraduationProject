@@ -51,4 +51,12 @@ public:
 	afx_msg void OnBnClickedButton6();
 	int colRatios[7];    // 列表A 的列宽比例
 	int colRatiosB[7];  // 列表B 的列宽比例
+	afx_msg void OnNMRClickList1(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnList1CopyFileName();
+	afx_msg void OnList1CopyFilePath();
+	afx_msg void OnList1DeleteFile();
+	afx_msg void OnList1OpenFile();
+	afx_msg void OnList1OpenInfo();
+	int iItem;
+	afx_msg void OnNMDblclkMfcshelltree1(NMHDR* pNMHDR, LRESULT* pResult);
 };

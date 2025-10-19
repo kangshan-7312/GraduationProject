@@ -90,6 +90,21 @@
     <ClInclude Include="CConfig1.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CClipboardOperations.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CShowFileInfoDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CPythonEnvironmentCheck.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CAPICall.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="json.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraduationProject.cpp">
@@ -156,6 +171,18 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CConfig1.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CClipboardOperations.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CShowFileInfoDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CPythonEnvironmentCheck.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CAPICall.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

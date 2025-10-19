@@ -17,6 +17,8 @@
 #define IDD_DIALOG7                     152
 #define IDD_CONFIG1                     154
 #define IDD_CONFIG2                     155
+#define IDR_MENU1                       158
+#define IDD_DIALOG8                     159
 #define IDC_BUTTON1                     1000
 #define IDC_EDIT1                       1001
 #define IDC_BUTTON8                     1001
@@ -32,9 +34,11 @@
 #define IDC_BUTTON5                     1006
 #define IDC_EDIT11                      1006
 #define IDC_BUTTON6                     1007
+#define IDC_EDIT16                      1007
 #define IDC_BUTTON7                     1008
 #define IDC_EDIT13                      1008
 #define IDC_EDIT2                       1009
+#define IDC_EDIT18                      1009
 #define IDC_EDIT3                       1010
 #define IDC_EDIT12                      1010
 #define IDC_EDIT8                       1011
@@ -45,7 +49,6 @@
 #define IDC_BUTTON9                     1014
 #define IDC_EDIT15                      1014
 #define IDC_BUTTON10                    1015
-#define IDC_EDIT16                      1015
 #define IDC_EDIT17                      1016
 #define IDC_MFCLINK1                    1018
 #define IDC_SLIDER1                     1019
@@ -53,14 +56,25 @@
 #define IDC_PICTURE                     1022
 #define IDC_MFCSHELLTREE1               1023
 #define IDC_TAB_MAIN                    1025
+#define IDC_COMBO1                      1027
+#define ID_LIST1_32771                  32771
+#define ID_LIST1_32772                  32772
+#define ID_LIST1_32773                  32773
+#define ID_LIST1_32774                  32774
+#define ID_LIST1_32775                  32775
+#define ID_LIST1_OPEN_FILE              32776
+#define ID_LIST1_DELETE_FILE            32777
+#define ID_LIST1_OPEN_INFO              32778
+#define ID_LIST1_COPY_FILE_NAME         32779
+#define ID_LIST1_COPY_FILE_PATH         32780
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        158
-#define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1026
+#define _APS_NEXT_RESOURCE_VALUE        161
+#define _APS_NEXT_COMMAND_VALUE         32781
+#define _APS_NEXT_CONTROL_VALUE         1028
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

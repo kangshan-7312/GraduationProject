@@ -94,12 +94,12 @@
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Program Files\MySQL\MySQL Server 8.0\include;D:\VisualStudio\Tool\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\MySQL\MySQL Server 8.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>C:\Program Files\MySQL\MySQL Server 8.0\lib;D:\VisualStudio\Tool\opencv\build\x64\vc16\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opencv_world4110d.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\MySQL\MySQL Server 8.0\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -190,6 +190,8 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CAPICall.h" />
+    <ClInclude Include="CClipboardOperations.h" />
     <ClInclude Include="CConfig1.h" />
     <ClInclude Include="CConfig2.h" />
     <ClInclude Include="CConfigDlg.h" />
@@ -203,8 +205,10 @@
     <ClInclude Include="CMachineID.h" />
     <ClInclude Include="CPictureCtrl.h" />
     <ClInclude Include="CPictureShowDlg.h" />
+    <ClInclude Include="CPythonEnvironmentCheck.h" />
     <ClInclude Include="CRegistrationDlg.h" />
     <ClInclude Include="CRegistryHelper.h" />
+    <ClInclude Include="CShowFileInfoDlg.h" />
     <ClInclude Include="CSystemAllInfoDlg.h" />
     <ClInclude Include="CToken.h" />
     <ClInclude Include="CTreeControlUser.h" />
@@ -212,11 +216,14 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="GraduationProject.h" />
     <ClInclude Include="GraduationProjectDlg.h" />
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CAPICall.cpp" />
+    <ClCompile Include="CClipboardOperations.cpp" />
     <ClCompile Include="CConfig1.cpp" />
     <ClCompile Include="CConfig2.cpp" />
     <ClCompile Include="CConfigDlg.cpp" />
@@ -230,8 +237,10 @@
     <ClCompile Include="CMachineID.cpp" />
     <ClCompile Include="CPictureCtrl.cpp" />
     <ClCompile Include="CPictureShowDlg.cpp" />
+    <ClCompile Include="CPythonEnvironmentCheck.cpp" />
     <ClCompile Include="CRegistrationDlg.cpp" />
     <ClCompile Include="CRegistryHelper.cpp" />
+    <ClCompile Include="CShowFileInfoDlg.cpp" />
     <ClCompile Include="CSystemAllInfoDlg.cpp" />
     <ClCompile Include="CToken.cpp" />
     <ClCompile Include="CTreeControlUser.cpp" />

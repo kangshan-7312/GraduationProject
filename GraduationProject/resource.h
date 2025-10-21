@@ -57,6 +57,7 @@
 #define IDC_MFCSHELLTREE1               1023
 #define IDC_TAB_MAIN                    1025
 #define IDC_COMBO1                      1027
+#define IDC_MFCSHELLTREE2               1028
 #define ID_LIST1_32771                  32771
 #define ID_LIST1_32772                  32772
 #define ID_LIST1_32773                  32773
@@ -74,7 +75,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        161
 #define _APS_NEXT_COMMAND_VALUE         32781
-#define _APS_NEXT_CONTROL_VALUE         1028
+#define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

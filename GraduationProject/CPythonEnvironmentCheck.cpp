@@ -7,7 +7,15 @@
 
 CPythonEnvironmentCheck::CPythonEnvironmentCheck() {}
 CPythonEnvironmentCheck::~CPythonEnvironmentCheck() {}
-
+static CString GetExePath(CString filename)
+{
+    CString strIniPath;
+    GetModuleFileName(NULL, strIniPath.GetBuffer(MAX_PATH), MAX_PATH);
+    strIniPath.ReleaseBuffer();
+    int pos = strIniPath.ReverseFind(_T('\\'));
+    strIniPath = strIniPath.Left(pos + 1) + _T(filename);
+    return strIniPath;
+}
 // 自动检测 Python
 bool CPythonEnvironmentCheck::DetectPython(int minMajor, int minMinor, CString& pythonPath)
 {
@@ -55,7 +63,12 @@ bool CPythonEnvironmentCheck::CheckDependencies(const CString& pythonExe, const 
 {
     // 构造命令行
     CString cmdLine;
-    cmdLine.Format(_T("\"%s\" \"D:\\Python\\TCP\\C_tool\\check_dependencies.py\""), pythonExe);
+	CString pythonExeQuoted;
+    pythonExeQuoted = GetExePath("Python\\FileInfo\\check_dependencies.py");
+    cmdLine.Format(_T("\"%s\" %s"), pythonExe, pythonExeQuoted); //check_dependencies.py
+    
+    AfxMessageBox(cmdLine);
+    
     for (auto& f : files)
     {
         cmdLine.AppendFormat(_T(" \"%s\""), f);

@@ -709,6 +709,6 @@ void CGraduationProjectDlg::OnList1OpenInfo()
 void CGraduationProjectDlg::OnNMDblclkMfcshelltree1(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	// TODO: 在此添加控件通知处理程序代码
-	MessageBox("双击事件触发！");
+	GetFilesInFolder(strPath);
 	*pResult = 0;
 }

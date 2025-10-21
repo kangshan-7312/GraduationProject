@@ -9,7 +9,15 @@
 
 
 // CConfig2 对话框
-
+static CString GetExePath(CString filename)
+{
+    CString strIniPath;
+    GetModuleFileName(NULL, strIniPath.GetBuffer(MAX_PATH), MAX_PATH);
+    strIniPath.ReleaseBuffer();
+    int pos = strIniPath.ReverseFind(_T('\\'));
+    strIniPath = strIniPath.Left(pos + 1) + _T(filename);
+    return strIniPath;
+}
 IMPLEMENT_DYNAMIC(CConfig2, CDialogEx)
 
 CConfig2::CConfig2(CWnd* pParent /*=nullptr*/)
@@ -57,8 +65,8 @@ void CConfig2::OnBnClickedButton2()
 {
     // TODO: 在此添加控件通知处理程序代码
     std::vector<CString> files = {
-             _T("D:\\Python\\TCP\\C_tool\\FileHandler.py"),
-             _T("D:\\Python\\TCP\\C_tool\\file_api.py")
+             _T(GetExePath("Python\\FileInfo\\FileHandler.py")),  //FileHandler.py
+             _T(GetExePath("Python\\FileInfo\\file_api.py"))
     };
     CString missing;
     if (pyCheck.CheckDependencies(pythonExe, files, missing))
@@ -86,9 +94,10 @@ void CConfig2::OnBnClickedButton8()
 {
     // TODO: 在此添加控件通知处理程序代码
     // 启动 Flask API
-    if (pyCheck.StartAPI(pythonExe, "D:\\Python\\TCP\\C_tool\\file_api.py"))
+    if (pyCheck.StartAPI(pythonExe, GetExePath("Python\\FileInfo\\file_api.py")))
     {
         AfxMessageBox(_T("API 已启动"));
+        //MessageBox(GetExePath("Python\\file_api.py"));
     }
     else
     {
